@@ -176,3 +176,11 @@ choose(node, proxy) ->
   if (!wasConnected && isConnected)
     node.getIncoming().map(flipGainedConnection)
 ```
+
+TODO:
+x make vocabulary consistent
+x visualize root node of the tree at the bottom (where influence gathers)
+x incoming connections come from 'upstream'
+x outgoing connections flow 'downstream'
+
+
