@@ -131,26 +131,25 @@ return false
 Same as last part of flipLostConnection
 
 ```
-rerank(node) ->
-  unProvision(node)
+reProvision(node) ->
+  if (node.hasManual)
+    return
+
+  wasConnected = isConnected(node);
+
+  if (wasConnected)
+    unProvision(node)
   
   newProvision = provisionConnection(node);
 
-  if (!newProvision)
+  if (!newProvision && wasConnected)
     node.getIncoming().map(flipLostConnection)
 
   if (newProvision)
     set provision = newProvision
 
-    // cycle means no connection means flipped!
-    if (isCycle(node))
-      unProvisionCycle() 
-      gatherCycleIncoming().map(flipLostConnection)
-      return
-
-    // re-provisioned, but didn't create cycle (and flip)
-    if (!isCycle(node))
-      return
+    if (!wasConnected) 
+      node.getIncoming().map(flipGainedConnection)
 ```
 
 ## Manual Selection
