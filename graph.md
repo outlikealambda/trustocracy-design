@@ -148,32 +148,36 @@ reProvision(node) ->
   if (newProvision)
     set provision = newProvision
 
-    if (!wasConnected) 
+    if (!wasConnected)
       node.getIncoming().map(flipGainedConnection)
 ```
 
 ## Manual Selection
 
 ```
-choose(node, proxy) ->
-  wasConnected = node.isConnected()
+manualConnection(source, target) ->
+  wasConnected = target.isConnected()
 
-  connect(node, proxy)
+  disconnect(source)
+  source.createRelationship(target)
 
-  // cycle means no connection
-  // doesn't matter if flipped?
-  if (isCycle(node))
+  if (isCycle(source))
     unProvisionCycle() 
-    gatherCycleIncoming().map(flipLostConnection)
+
+    // if wasn't connected, then rest of cycle must not
+    // have been connected, so wouldn't flip anything
+    if (wasConnected)
+      gatherCycleIncoming().map(flipLostConnection)
+
     return
 
-  isConnected = node.isConnected()
+  isConnected = target.isConnected()
 
   if (wasConnected && !isConnected) 
-    node.getIncoming().map(flipLostConnection)
+    target.getIncoming().map(flipLostConnection)
 
   if (!wasConnected && isConnected)
-    node.getIncoming().map(flipGainedConnection)
+    target.getIncoming().map(flipGainedConnection)
 ```
 
 TODO:
