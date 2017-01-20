@@ -164,10 +164,7 @@ manualConnection(source, target) ->
   if (isCycle(source))
     unProvisionCycle() 
 
-    // if wasn't connected, then rest of cycle must not
-    // have been connected, so wouldn't flip anything
-    if (wasConnected)
-      gatherCycleIncoming().map(flipLostConnection)
+    gatherCycleIncoming().map(flipLostConnection)
 
     return
 
