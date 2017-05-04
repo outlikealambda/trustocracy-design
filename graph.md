@@ -183,4 +183,32 @@ x visualize root node of the tree at the bottom (where influence gathers)
 x incoming connections come from 'upstream'
 x outgoing connections flow 'downstream'
 
+# V2 Connectivity
 
+## Recursively collect incoming nodes
+- add to linkedHashSet
+- remove topical relationship
+- descend
+
+## Walk each node
+walk(source) 
+  if (source.isConnected)
+    return true
+  if (source.isDisconnected)
+    return false
+  if (source.isUnknown)
+    source.children.stream()
+      .sort(rank)
+      .filter(walk)
+      .findFirst()
+      .ifPresent(source.setConnected)
+      .orElse(source.setDisconnected)
+
+# V3 Connectivity
+0. Modify source (change/add/remove connection), add to queue
+
+1. Pull first node off queue
+2. Walk from node until: end (opinion, no connection), cycle, or already visited
+3. Mark all touched nodes as visited
+4. If any touched node changes, add _children_ of touched node to forward walk queue
+5. Repeat 
